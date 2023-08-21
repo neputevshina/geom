@@ -98,9 +98,8 @@ func (g Geom) To3d() Geom3d {
 }
 
 func Identity2d() (g Geom) {
-	for i := range g {
-		g[i][i] = 1
-	}
+	g[0][0] = 1
+	g[1][1] = 1
 	return
 }
 
