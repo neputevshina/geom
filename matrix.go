@@ -56,7 +56,7 @@ func (g Geom) Inverse() (b Geom) {
 }
 
 func (g Geom) Apply(vec [3]float64) (o [3]float64) {
-	for i := range g {
+	for i := range g[:2] {
 		for j := range vec {
 			o[i] += g[j][i] * vec[j]
 		}
