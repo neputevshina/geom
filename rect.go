@@ -95,7 +95,7 @@ func (p Point) Pmax(q Point) Point {
 	return Point{max(p.X, q.X), max(p.Y, q.Y)}
 }
 
-// Pmax returns the result of per-element minimum of vectors p and q.
+// Pmin returns the result of per-element minimum of vectors p and q.
 func (p Point) Pmin(q Point) Point {
 	return Point{min(p.X, q.X), min(p.Y, q.Y)}
 }
