@@ -39,6 +39,11 @@ func (p Point) Mul(k float64) Point {
 	return Point{p.X * k, p.Y * k}
 }
 
+// Pmul returns the result of per-element multiplication of vectors p and q.
+func (p Point) Pmul(q Point) Point {
+	return Point{p.X * q.X, p.Y * q.Y}
+}
+
 func (p Point) Abs() Point {
 	return Point{math.Abs(p.X), math.Abs(p.Y)}
 }
@@ -57,7 +62,7 @@ func (p Point) Cross(q Point) Point3d {
 	return Pt3(p.X, p.Y, 1).Cross(Pt3(q.X, q.Y, 1))
 }
 
-// Triple returns the vector p•(q×d)
+// Triple returns the vector p•(q×d).
 func (p Point) Triple(q, d Point) float64 {
 	return p.To3().Dot(q.Cross(d))
 }
@@ -76,6 +81,23 @@ func (p Point) Floor() Point {
 // Ceil returns the least integer vector greater than or equal to x.
 func (p Point) Ceil() Point {
 	return Pt(math.Ceil(p.X), math.Ceil(p.Y))
+}
+
+// Mix linearly interpolates between points p and b by the parameter t.
+func (p Point) Mix(b, t Point) Point {
+	x := (1-t.X)*p.X + t.X*b.X
+	y := (1-t.Y)*p.Y + t.Y*b.Y
+	return Pt(x, y)
+}
+
+// Pmax returns the result of per-element maximum of vectors p and q.
+func (p Point) Pmax(q Point) Point {
+	return Point{max(p.X, q.X), max(p.Y, q.Y)}
+}
+
+// Pmax returns the result of per-element minimum of vectors p and q.
+func (p Point) Pmin(q Point) Point {
+	return Point{min(p.X, q.X), min(p.Y, q.Y)}
 }
 
 // Degrade returns the nearest integer vector as image.Point.
@@ -292,8 +314,8 @@ func (r Rectangle) Center() Point {
 	return Pt((r.Min.X+r.Max.X)/2, (r.Min.Y+r.Max.Y)/2)
 }
 
-// Distance evaluates signed distance function of a rectangle at a given point.
-// If signed distance is negative, then point is inside the rectangle.
+// Distance evaluates signed distance function of the rectangle at the given point.
+// If signed distance is negative, then the point is inside the rectangle.
 // If it is zero, then it is on its boundary.
 func (r Rectangle) Distance(at Point) float64 {
 	// var x, y float64
@@ -308,7 +330,21 @@ func (r Rectangle) Distance(at Point) float64 {
 	return d.Mul(0.5).Length()
 }
 
-// Degrade returns the nearest integer image.Rectangle.
+// Degrade returns the nearest image.Rectangle.
 func (r Rectangle) Degrade() image.Rectangle {
 	return image.Rectangle{Min: r.Min.Degrade(), Max: r.Max.Degrade()}
+}
+
+func max(a, b float64) float64 {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func min(a, b float64) float64 {
+	if a < b {
+		return a
+	}
+	return b
 }
